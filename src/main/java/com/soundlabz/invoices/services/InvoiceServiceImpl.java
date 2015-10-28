@@ -1,11 +1,14 @@
 package com.soundlabz.invoices.services;
 
+import com.soundlabz.invoices.domain.Currency;
 import com.soundlabz.invoices.domain.Invoice;
 import com.soundlabz.invoices.domain.InvoiceItem;
 import com.soundlabz.invoices.domain.Recipient;
+import com.soundlabz.invoices.domain.repositories.CurrencyRepository;
 import com.soundlabz.invoices.domain.repositories.InvoiceItemRepository;
 import com.soundlabz.invoices.domain.repositories.InvoiceRepository;
 import com.soundlabz.invoices.domain.repositories.RecipientRepository;
+import com.soundlabz.invoices.domain.requestobjects.InvoiceRequest;
 import com.soundlabz.invoices.utils.TaxCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private InvoiceRepository invoiceRepository;
     private RecipientRepository recipientRepository;
     private InvoiceItemRepository invoiceItemRepository;
+    private CurrencyRepository currencyRepository;
 
     @Autowired
     public void setInvoiceRepository(InvoiceRepository invoiceRepository) {
@@ -37,6 +41,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.invoiceItemRepository = invoiceItemRepository;
     }
 
+    @Autowired
+    public void setCurrencyRepository(CurrencyRepository currencyRepository) {
+        this.currencyRepository = currencyRepository;
+    }
+
     @Override
     public Collection<Invoice> getInvoices() {
         return invoiceRepository.findAll();
@@ -48,9 +57,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice createOrUpdateInvoice(Invoice invoice) {
+    public Invoice createOrUpdateInvoice(InvoiceRequest invoiceRequest) {
 
+        Currency c = currencyRepository.findOne(invoiceRequest.getCurrencyId());
+        Recipient r = recipientRepository.findOne(invoiceRequest.getRecipientId());
 
+        Invoice invoice = invoiceRequest.toInvoice();
+        invoice.setCurrency(c);
+        invoice.setRecipient(r);
         final Set<InvoiceItem> items = invoice.getInvoiceItems().stream().map(item -> {
             item.setPrice(item.getUnitCost().multiply(new BigDecimal(item.getQuantity())));
             return item;
@@ -64,6 +78,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             TaxCalculator tc = new TaxCalculator();
             BigDecimal totalPlusTax = tc.computeSubtotal(invoice.getTax(), total);
             invoice.setTotal(totalPlusTax);
+            invoice.setSubtotal(total);
         }
 
         invoiceRepository.save(invoice);

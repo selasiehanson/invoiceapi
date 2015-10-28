@@ -1,6 +1,7 @@
 package com.soundlabz.invoices.services;
 
 import com.soundlabz.invoices.domain.Invoice;
+import com.soundlabz.invoices.domain.requestobjects.InvoiceRequest;
 
 import java.util.Collection;
 
@@ -9,7 +10,7 @@ public interface InvoiceService {
 
     Invoice getInvoice(Long id);
 
-    Invoice createOrUpdateInvoice(Invoice invoice);
+    Invoice createOrUpdateInvoice(InvoiceRequest invoiceRequest);
 
     void deleteInvoice(Long id);
 }

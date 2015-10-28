@@ -14,9 +14,6 @@ public class InvoiceItem {
     @GeneratedValue
     private Long id;
 
-//    @NotNull
-    private String name;
-
     private String description;
 
     @Column(precision = 15, scale = 2)
@@ -33,7 +30,7 @@ public class InvoiceItem {
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")
-//    @JsonIgnore
+    @JsonIgnore
     private Invoice invoice;
 
     public InvoiceItem() {
@@ -46,14 +43,6 @@ public class InvoiceItem {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
@@ -94,5 +83,9 @@ public class InvoiceItem {
 
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
+    }
+
+    public Long getInvoiceId(){
+        return invoice.getId();
     }
 }

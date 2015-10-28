@@ -1,5 +1,7 @@
 package com.soundlabz.invoices.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -14,7 +16,7 @@ public class Invoice {
     @GeneratedValue
     private Long id;
 
-    //    @NotNull
+    @NotNull
     private Date invoiceDate;
 
     @Column(precision = 15, scale = 2)
@@ -33,11 +35,13 @@ public class Invoice {
 
     @ManyToOne
     @JoinColumn(name = "recipient_id")
+    @JsonIgnore
     private Recipient recipient;
 
     @ManyToOne
     @JoinColumn(name = "currency_id")
-    private  Currency currency;
+    @JsonIgnore
+    private Currency currency;
 
     private String notes;
 
@@ -114,5 +118,13 @@ public class Invoice {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public Long getCurrencyId() {
+        return currency.getId();
+    }
+
+    public Long getRecipientId() {
+        return recipient.getId();
     }
 }
