@@ -13,10 +13,10 @@ import java.util.Set;
 public class Invoice {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "invoice date is required")
     private Date invoiceDate;
 
     @Column(precision = 15, scale = 2)

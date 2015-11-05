@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class InvoiceRequest {
 
-    private Long id;
+    private Long  id;
 
     private Date invoiceDate;
 
@@ -22,7 +22,7 @@ public class InvoiceRequest {
 
     private Set<InvoiceItem> invoiceItems;
 
-    private Long recipientId;
+    private Long  recipientId;
 
     private Long currencyId;
 
@@ -31,11 +31,11 @@ public class InvoiceRequest {
     public InvoiceRequest() {
     }
 
-    public Long getId() {
+    public Long  getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long  id) {
         this.id = id;
     }
 
@@ -63,11 +63,11 @@ public class InvoiceRequest {
         this.invoiceItems = invoiceItems;
     }
 
-    public Long getRecipientId() {
+    public Long  getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(Long recipientId) {
+    public void setRecipientId(Long  recipientId) {
         this.recipientId = recipientId;
     }
 

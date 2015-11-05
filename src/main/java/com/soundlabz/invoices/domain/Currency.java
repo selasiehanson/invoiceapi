@@ -12,7 +12,7 @@ import java.util.Set;
 public class Currency {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull

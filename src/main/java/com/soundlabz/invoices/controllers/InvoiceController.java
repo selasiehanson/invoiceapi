@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -33,12 +34,12 @@ public class InvoiceController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    Invoice createInvoice(@RequestBody InvoiceRequest invoiceRequest) {
+    Invoice createInvoice(@Valid @RequestBody InvoiceRequest invoiceRequest) {
         return saveOrUpdate(invoiceRequest);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    Invoice updateInvoice(@PathVariable Long id, @RequestBody InvoiceRequest invoiceRequest) {
+    Invoice updateInvoice(@PathVariable Long id, @Valid @RequestBody InvoiceRequest invoiceRequest) {
         return saveOrUpdate(invoiceRequest);
     }
 

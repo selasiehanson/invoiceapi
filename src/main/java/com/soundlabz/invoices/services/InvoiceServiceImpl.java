@@ -52,7 +52,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice getInvoice(Long id) {
+    public Invoice getInvoice(Long  id) {
         return invoiceRepository.findOne(id);
     }
 
@@ -86,7 +86,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void deleteInvoice(Long id) {
+    public void deleteInvoice(Long  id) {
 
     }
 }
