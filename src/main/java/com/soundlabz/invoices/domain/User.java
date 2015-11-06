@@ -15,11 +15,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = { "username" }))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
 public class User implements UserDetails {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "usersid_seq", sequenceName = "usersid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersid_seq")
+    @Column(updatable = false)
     private Long id;
 
     @NotNull
@@ -53,6 +56,10 @@ public class User implements UserDetails {
 
     public User() {
 
+    }
+
+    public User(String username) {
+        this.username = username;
     }
 
     public User(String username, Date expires) {

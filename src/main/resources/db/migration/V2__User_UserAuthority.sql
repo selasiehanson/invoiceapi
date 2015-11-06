@@ -1,12 +1,14 @@
+drop sequence if exists usersid_seq;
+create sequence usersid_seq;
+
 create table users (
-    id bigint not null,
+    id bigserial primary key,
     account_enabled boolean not null,
     account_expired boolean not null,
     account_locked boolean not null,
     credentials_expired boolean not null,
     password varchar(100) not null,
-    username varchar(30) not null,
-    primary key (id)
+    username varchar(30) not null
 );
 
 create table user_authorities (
