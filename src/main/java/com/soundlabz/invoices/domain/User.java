@@ -18,10 +18,9 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
 public class User implements UserDetails {
 
-
     @Id
-    @SequenceGenerator(name = "usersid_seq", sequenceName = "usersid_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersid_seq")
+    @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @Column(updatable = false)
     private Long id;
 

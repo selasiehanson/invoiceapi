@@ -9,11 +9,11 @@ import javax.validation.constraints.NotNull;
 public class Receipt {
 
     @Id
-    @SequenceGenerator(name = "receipts_idreceipts_seq",
-            sequenceName = "receipts_idreceipts_seq",
+    @SequenceGenerator(name = "receipts_id_seq",
+            sequenceName = "receipts_id_seq",
             allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "receipts_idreceipts_seq")
+            generator = "receipts_id_seq")
     @Column(updatable = false)
     private Long id;
 

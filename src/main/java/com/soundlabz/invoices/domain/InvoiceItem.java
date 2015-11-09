@@ -10,8 +10,11 @@ import java.math.BigDecimal;
 @Table(name = "invoice_items")
 public class InvoiceItem {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "invoice_items_id_seq", sequenceName = "invoice_items_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invoice_items_id_seq")
+    @Column(updatable = false)
     private Long id;
 
     private String description;

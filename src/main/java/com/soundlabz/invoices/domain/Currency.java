@@ -12,18 +12,29 @@ import java.util.Set;
 public class Currency {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "currencies_id_seq",
+            sequenceName = "currencies_id_seq",
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "currencies_id_seq")
+    @Column(updatable = false)
     private Long id;
 
-    @NotNull
     private String currencyName;
 
-    @NotNull
     private String symbol;
 
-    @NotNull
     @Size(max = 3)
     private String currencyCode;
+
+    private String isoAlpha2;
+
+    private String isoAlpha3;
+
+    private Integer isoNumeric;
+
+    @NotNull
+    private String country;
 
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL)
 
@@ -65,6 +76,37 @@ public class Currency {
         this.currencyCode = currencyCode;
     }
 
+    public String getIsoAlpha2() {
+        return isoAlpha2;
+    }
+
+    public void setIsoAlpha2(String isoAlpha2) {
+        this.isoAlpha2 = isoAlpha2;
+    }
+
+    public String getIsoAlpha3() {
+        return isoAlpha3;
+    }
+
+    public void setIsoAlpha3(String isoAlpha3) {
+        this.isoAlpha3 = isoAlpha3;
+    }
+
+    public Integer getIsoNumeric() {
+        return isoNumeric;
+    }
+
+    public void setIsoNumeric(Integer isoNumeric) {
+        this.isoNumeric = isoNumeric;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }
 
 

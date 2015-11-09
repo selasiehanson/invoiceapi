@@ -13,7 +13,9 @@ import java.util.Set;
 public class Recipient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "recipients_id_seq", sequenceName = "recipients_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipients_id_seq")
+    @Column(updatable = false)
     private Long id;
 
     @NotNull

@@ -9,20 +9,21 @@ import com.soundlabz.invoices.domain.Recipient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
 public class InvoiceRequest {
 
-    private Long  id;
+    private Long id;
 
-    private Date invoiceDate;
+    private LocalDate invoiceDate;
 
     private BigDecimal tax;
 
     private Set<InvoiceItem> invoiceItems;
 
-    private Long  recipientId;
+    private Long recipientId;
 
     private Long currencyId;
 
@@ -31,19 +32,19 @@ public class InvoiceRequest {
     public InvoiceRequest() {
     }
 
-    public Long  getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long  id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Date getInvoiceDate() {
+    public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(Date invoiceDate) {
+    public void setInvoiceDate(LocalDate invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
@@ -63,11 +64,11 @@ public class InvoiceRequest {
         this.invoiceItems = invoiceItems;
     }
 
-    public Long  getRecipientId() {
+    public Long getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(Long  recipientId) {
+    public void setRecipientId(Long recipientId) {
         this.recipientId = recipientId;
     }
 

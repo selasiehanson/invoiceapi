@@ -1,12 +1,21 @@
-create table currencies (
-  id BIGINT primary key,
-  currency_code varchar(3) not null,
-  currency_name varchar(255) not null,
-  symbol varchar(255) not null
+create sequence invoices_id_seq;
+create sequence currencies_id_seq;
+create sequence invoice_items_id_seq;
+create sequence recipients_id_seq;
+
+CREATE TABLE currencies (
+  id BIGSERIAL PRIMARY key,
+  country varchar(200) NOT NULL,
+  iso_alpha2 varchar(2) DEFAULT NULL,
+  iso_alpha3 varchar(3) DEFAULT NULL,
+  iso_numeric integer,
+  currency_code varchar(3) DEFAULT NULL,
+  currency_name varchar(32) DEFAULT NULL,
+  symbol varchar(3) DEFAULT NULL
 );
 
 create table invoice_items (
-  id BIGINT primary key,
+  id BIGSERIAL primary key,
   description varchar(255),
   price numeric(15, 2),
   quantity int8,
@@ -15,7 +24,7 @@ create table invoice_items (
 );
 
 create table invoices (
-  id BIGINT primary key,
+  id BIGSERIAL primary key,
   invoice_date timestamp not null,
   notes varchar(255),
   subtotal numeric(15, 2),
@@ -26,7 +35,7 @@ create table invoices (
 );
 
 create table recipients (
-  id BIGINT primary key,
+  id BIGSERIAL primary key,
   address varchar(255) not null,
   email varchar(255),
   name varchar(255) not null,

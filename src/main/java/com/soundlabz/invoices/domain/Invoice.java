@@ -1,10 +1,17 @@
 package com.soundlabz.invoices.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.soundlabz.invoices.utils.JsonDateDeserializer;
+import com.soundlabz.invoices.utils.JsonDateSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -13,11 +20,18 @@ import java.util.Set;
 public class Invoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "invoices_id_seq",
+            sequenceName = "invoices_id_seq",
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "invoices_id_seq")
+    @Column(updatable = false)
     private Long id;
 
     @NotNull(message = "invoice date is required")
-    private Date invoiceDate;
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate invoiceDate;
 
     @Column(precision = 15, scale = 2)
     private BigDecimal subtotal;
@@ -56,11 +70,11 @@ public class Invoice {
         this.id = id;
     }
 
-    public Date getInvoiceDate() {
+    public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(Date invoiceDate) {
+    public void setInvoiceDate(LocalDate invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
@@ -126,5 +140,13 @@ public class Invoice {
 
     public Long getRecipientId() {
         return recipient.getId();
+    }
+
+    public String getRecipientName() {
+        return recipient.getName();
+    }
+
+    public String getCurrencyName() {
+        return currency.getCurrencyName();
     }
 }
