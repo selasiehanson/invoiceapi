@@ -17,18 +17,23 @@ public class InvoiceItem {
     @Column(updatable = false)
     private Long id;
 
+    @NotNull
+//    @NotBlank
     private String description;
 
     @Column(precision = 15, scale = 2)
-//    @NotNull
+    @NotNull
+//    @NotBlank
     private BigDecimal unitCost;
 
-//    @NotNull
+    @NotNull
+//    @NotBlank
     private Long quantity;
 
 
     @Column(precision = 15, scale = 2)
-//    @NotNull
+    @NotNull
+//    @NotBlank
     private BigDecimal price;
 
     @ManyToOne

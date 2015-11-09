@@ -1,26 +1,25 @@
 package com.soundlabz.invoices.domain.requestobjects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.soundlabz.invoices.domain.Currency;
 import com.soundlabz.invoices.domain.Invoice;
 import com.soundlabz.invoices.domain.InvoiceItem;
-import com.soundlabz.invoices.domain.Recipient;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 public class InvoiceRequest {
 
     private Long id;
 
+//    @NotNull(message = "invoice date is required")
+    @NotBlank
     private LocalDate invoiceDate;
 
     private BigDecimal tax;
 
+    @Valid
     private Set<InvoiceItem> invoiceItems;
 
     private Long recipientId;
