@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @Table(name="user_authorities")
 public class UserAuthority implements GrantedAuthority {
 
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

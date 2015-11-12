@@ -5,11 +5,14 @@ import com.soundlabz.invoices.domain.Invoice;
 import com.soundlabz.invoices.domain.requestobjects.InvoiceRequest;
 import com.soundlabz.invoices.services.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Collection;
 
 @RestController
@@ -60,4 +63,23 @@ public class InvoiceController {
         return invoiceService.createOrUpdateInvoice(invoiceRequest);
     }
 
+    @RequestMapping(value = "/aspdf", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getPdfOfInvoice() {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        String filename = "preview.pdf";
+
+        //downloads the pdf
+        //headers.setContentDispositionFormData(filename, filename);
+
+        //shows pdf inline
+        headers.add("content-disposition", "inline;filename=" + filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        try {
+            return new ResponseEntity<byte[]>(invoiceService.getPreview(), headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<byte[]>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

@@ -44,11 +44,11 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/resources/**").permitAll()
 
-
                 //allow anonymous post login
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
 
-                //allow anonymous GET to API
+                //todo: add permissions to API
+                .antMatchers(HttpMethod.GET, "/templates/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
 
                 //all other request to be authenticated

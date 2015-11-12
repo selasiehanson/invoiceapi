@@ -13,6 +13,8 @@ import com.soundlabz.invoices.utils.TaxCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Set;
@@ -25,6 +27,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     private RecipientRepository recipientRepository;
     private InvoiceItemRepository invoiceItemRepository;
     private CurrencyRepository currencyRepository;
+    private HtmlToPdfConverterService htmlToPdfConverterService;
+
 
     @Autowired
     public void setInvoiceRepository(InvoiceRepository invoiceRepository) {
@@ -46,13 +50,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.currencyRepository = currencyRepository;
     }
 
+    @Autowired
+    public void setHtmlToPdfConverterService(HtmlToPdfConverterService htmlToPdfConverterService) {
+        this.htmlToPdfConverterService = htmlToPdfConverterService;
+    }
+
     @Override
     public Collection<Invoice> getInvoices() {
         return invoiceRepository.findAll();
     }
 
     @Override
-    public Invoice getInvoice(Long  id) {
+    public Invoice getInvoice(Long id) {
         return invoiceRepository.findOne(id);
     }
 
@@ -72,7 +81,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         BigDecimal total = items.stream().map(x -> x.getUnitCost()
                 .multiply(BigDecimal.valueOf(x.getQuantity())))
-                .reduce((a, b) -> a.add(b)).orElse(new BigDecimal(0.0));
+                .reduce(BigDecimal::add).orElse(new BigDecimal(0.0));
 
         if (invoice.getTax().floatValue() >= 0.0f) {
             TaxCalculator tc = new TaxCalculator();
@@ -86,7 +95,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void deleteInvoice(Long  id) {
+    public void deleteInvoice(Long id) {
 
+    }
+
+    @Override
+    public byte[] getPreview() throws IOException {
+        String fullOutputFilePath = htmlToPdfConverterService.convert();
+        RandomAccessFile f = new RandomAccessFile(fullOutputFilePath, "r");
+        byte[] b = new byte[(int) f.length()];
+        f.readFully(b);
+        return b;
     }
 }
