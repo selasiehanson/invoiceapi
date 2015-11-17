@@ -1,9 +1,5 @@
 package com.soundlabz.invoices.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.JoinColumnOrFormula;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -31,7 +27,6 @@ public class Recipient {
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
     private Set<Invoice> invoices;
-
 
     public Recipient() {
     }

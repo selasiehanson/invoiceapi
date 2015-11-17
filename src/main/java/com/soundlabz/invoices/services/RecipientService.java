@@ -10,5 +10,7 @@ public interface RecipientService {
 
     public Recipient createRecipient(Recipient create);
 
-    public Recipient updateRecipient(Long  id, Recipient update);
+    public Recipient getRecipient(Long id);
+
+    public Recipient updateRecipient(Long id, Recipient update);
 }

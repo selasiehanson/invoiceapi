@@ -28,6 +28,11 @@ public class RecipientServiceImpl implements RecipientService {
     }
 
     @Override
+    public Recipient getRecipient(Long id) {
+        return recipientRepository.findOne(id);
+    }
+
+    @Override
     public Recipient updateRecipient(Long  id, Recipient recipient) {
         recipientRepository.save(recipient);
         return null;

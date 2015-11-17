@@ -3,10 +3,7 @@ package com.soundlabz.invoices.controllers;
 import com.soundlabz.invoices.domain.Recipient;
 import com.soundlabz.invoices.services.RecipientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -30,5 +27,10 @@ public class RecipientsController {
     @RequestMapping(method = RequestMethod.POST)
     public Recipient createRecipient(@Valid @RequestBody Recipient recipient) {
         return recipientService.createRecipient(recipient);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Recipient findInvoice(@PathVariable Long id) {
+        return recipientService.getRecipient(id);
     }
 }
