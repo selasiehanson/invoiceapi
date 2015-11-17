@@ -26,6 +26,7 @@ create table invoice_items (
 create table invoices (
   id BIGSERIAL primary key,
   invoice_date timestamp not null,
+  due_date timestamp not null,
   notes varchar(255),
   subtotal numeric(15, 2),
   tax Decimal(15,2) default '0.00' not null,

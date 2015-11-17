@@ -4,15 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.soundlabz.invoices.utils.JsonDateDeserializer;
 import com.soundlabz.invoices.utils.JsonDateSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -58,6 +55,10 @@ public class Invoice {
     private Currency currency;
 
     private String notes;
+
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate dueDate;
 
     public Invoice() {
     }
@@ -148,5 +149,14 @@ public class Invoice {
 
     public String getCurrencyName() {
         return currency.getCurrencyName();
+    }
+
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 }

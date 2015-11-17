@@ -2,25 +2,27 @@ package com.soundlabz.invoices.domain.requestobjects;
 
 import com.soundlabz.invoices.domain.Invoice;
 import com.soundlabz.invoices.domain.InvoiceItem;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class InvoiceRequest {
 
     private Long id;
 
 //    @NotNull(message = "invoice date is required")
-    @NotBlank
+//    @NotBlank
     private LocalDate invoiceDate;
+
+    private LocalDate dueDate;
 
     private BigDecimal tax;
 
     @Valid
-    private Set<InvoiceItem> invoiceItems;
+    private Set<InvoiceItemRequest> invoiceItems;
 
     private Long recipientId;
 
@@ -47,6 +49,14 @@ public class InvoiceRequest {
         this.invoiceDate = invoiceDate;
     }
 
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public BigDecimal getTax() {
         return tax;
     }
@@ -55,11 +65,11 @@ public class InvoiceRequest {
         this.tax = tax;
     }
 
-    public Set<InvoiceItem> getInvoiceItems() {
+    public Set<InvoiceItemRequest> getInvoiceItems() {
         return invoiceItems;
     }
 
-    public void setInvoiceItems(Set<InvoiceItem> invoiceItems) {
+    public void setInvoiceItems(Set<InvoiceItemRequest> invoiceItems) {
         this.invoiceItems = invoiceItems;
     }
 
@@ -93,8 +103,10 @@ public class InvoiceRequest {
         invoice.setId(this.getId());
         invoice.setTax(this.getTax());
         invoice.setInvoiceDate(this.getInvoiceDate());
+        invoice.setDueDate(this.getDueDate());
         invoice.setNotes(this.getNotes());
-        invoice.setInvoiceItems(this.getInvoiceItems());
+        Set<InvoiceItem> items =  this.getInvoiceItems().stream().map(x -> x.toInvoiceItem()).collect(Collectors.toSet());
+        invoice.setInvoiceItems(items);
         invoice.getInvoiceItems().stream().forEach(x -> x.setInvoice(invoice));
         return invoice;
     }
