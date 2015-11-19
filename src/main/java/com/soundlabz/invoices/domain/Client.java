@@ -1,16 +1,18 @@
 package com.soundlabz.invoices.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "recipients")
-public class Recipient {
+@Table(name = "clients")
+public class Client {
 
     @Id
-    @SequenceGenerator(name = "recipients_id_seq", sequenceName = "recipients_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipients_id_seq")
+    @SequenceGenerator(name = "clients_id_seq", sequenceName = "clients_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_id_seq")
     @Column(updatable = false)
     private Long id;
 
@@ -25,10 +27,15 @@ public class Recipient {
 
     private String email;
 
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Invoice> invoices;
 
-    public Recipient() {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
+    public Client() {
     }
 
     public Long getId() {
@@ -77,5 +84,13 @@ public class Recipient {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

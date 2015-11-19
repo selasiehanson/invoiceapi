@@ -3,10 +3,7 @@ package com.soundlabz.invoices.controllers;
 import com.soundlabz.invoices.domain.Currency;
 import com.soundlabz.invoices.services.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -30,4 +27,5 @@ public class CurrenciesController {
     public Currency createCurrency(@RequestBody Currency currency) {
         return currencyService.saveCurrency(currency);
     }
+
 }

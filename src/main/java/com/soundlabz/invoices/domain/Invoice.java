@@ -41,18 +41,23 @@ public class Invoice {
     @NotNull
     private BigDecimal total;
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<InvoiceItem> invoiceItems;
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id")
+    @JoinColumn(name = "client_id")
     @JsonIgnore
-    private Recipient recipient;
+    private Client client;
 
     @ManyToOne
     @JoinColumn(name = "currency_id")
     @JsonIgnore
     private Currency currency;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     private String notes;
 
@@ -111,12 +116,12 @@ public class Invoice {
         this.invoiceItems = invoiceItems;
     }
 
-    public Recipient getRecipient() {
-        return recipient;
+    public Client getClient() {
+        return client;
     }
 
-    public void setRecipient(Recipient recipient) {
-        this.recipient = recipient;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public String getNotes() {
@@ -139,12 +144,12 @@ public class Invoice {
         return currency.getId();
     }
 
-    public Long getRecipientId() {
-        return recipient.getId();
+    public Long getClientId() {
+        return client.getId();
     }
 
-    public String getRecipientName() {
-        return recipient.getName();
+    public String getClientName() {
+        return client.getName();
     }
 
     public String getCurrencyName() {
@@ -158,5 +163,13 @@ public class Invoice {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

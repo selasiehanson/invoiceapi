@@ -1,7 +1,5 @@
 package com.soundlabz.invoices.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,8 +34,7 @@ public class Currency {
     @NotNull
     private String country;
 
-    @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL)
-
+    @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Invoice> invoices;
 
     public Currency() {

@@ -46,6 +46,7 @@ public class InvoiceApplication {
                 System.out.println("We have " + receiptRepository.count() + " receipts");
 
                 long count = userRepository.count();
+//                addUser("user2", "password");
                 if (count == 0) {
                     addUser("user", "password");
                     addUser("admin", "password");

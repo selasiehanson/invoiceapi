@@ -17,7 +17,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/invoices")
-public class InvoiceController {
+public class InvoiceController extends  BaseController{
 
     private InvoiceService invoiceService;
 
@@ -27,27 +27,33 @@ public class InvoiceController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Invoice> getInvoices() {
-        return invoiceService.getInvoices();
+    public Collection<Invoice> getInvoices() {
+        return invoiceService.getInvoices(getCurrentUser());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    Invoice findInvoice(@PathVariable Long id) {
+    public Invoice findInvoice(@PathVariable Long id) {
         return invoiceService.getInvoice(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    Invoice createInvoice(@Valid @RequestBody InvoiceRequest invoiceRequest) {
+    public Invoice createInvoice(@Valid @RequestBody InvoiceRequest invoiceRequest) {
         return saveOrUpdate(invoiceRequest);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    Invoice updateInvoice(@PathVariable Long id, @Valid @RequestBody InvoiceRequest invoiceRequest) {
+    public Invoice updateInvoice(@PathVariable Long id, @Valid @RequestBody InvoiceRequest invoiceRequest) {
+        if (invoiceRequest.getId() == null) {
+            throw new ParameterMissingException("id cannot be null");
+        }
         return saveOrUpdate(invoiceRequest);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void updateInvoice(@PathVariable Long id) {
+    public void deleteInvoice(@PathVariable Long id) {
+        if (id == null) {
+            throw new ParameterMissingException("id cannot be null");
+        }
         invoiceService.deleteInvoice(id);
     }
 
@@ -56,11 +62,11 @@ public class InvoiceController {
             throw new ParameterMissingException("Currency Id missing");
         }
 
-        if (invoiceRequest.getRecipientId() == null) {
+        if (invoiceRequest.getClientId() == null) {
             throw new ParameterMissingException("Recipeint Id is mising");
         }
 
-        return invoiceService.createOrUpdateInvoice(invoiceRequest);
+        return invoiceService.createOrUpdateInvoice(invoiceRequest, getCurrentUser());
     }
 
     @RequestMapping(value = "/aspdf", method = RequestMethod.GET)

@@ -1,13 +1,10 @@
 package com.soundlabz.invoices.services;
 
-import com.soundlabz.invoices.domain.Currency;
-import com.soundlabz.invoices.domain.Invoice;
-import com.soundlabz.invoices.domain.InvoiceItem;
-import com.soundlabz.invoices.domain.Recipient;
+import com.soundlabz.invoices.domain.*;
 import com.soundlabz.invoices.domain.repositories.CurrencyRepository;
 import com.soundlabz.invoices.domain.repositories.InvoiceItemRepository;
 import com.soundlabz.invoices.domain.repositories.InvoiceRepository;
-import com.soundlabz.invoices.domain.repositories.RecipientRepository;
+import com.soundlabz.invoices.domain.repositories.ClientRepository;
 import com.soundlabz.invoices.domain.requestobjects.InvoiceRequest;
 import com.soundlabz.invoices.utils.TaxCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,7 @@ import java.util.stream.Collectors;
 public class InvoiceServiceImpl implements InvoiceService {
 
     private InvoiceRepository invoiceRepository;
-    private RecipientRepository recipientRepository;
+    private ClientRepository clientRepository;
     private InvoiceItemRepository invoiceItemRepository;
     private CurrencyRepository currencyRepository;
     private HtmlToPdfConverterService htmlToPdfConverterService;
@@ -36,8 +33,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Autowired
-    public void setRecipientRepository(RecipientRepository recipientRepository) {
-        this.recipientRepository = recipientRepository;
+    public void setClientRepository(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @Autowired
@@ -56,8 +53,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Collection<Invoice> getInvoices() {
-        return invoiceRepository.findAll();
+    public Collection<Invoice> getInvoices(User user) {
+        return invoiceRepository.findByUserId(user.getId());
     }
 
     @Override
@@ -66,14 +63,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice createOrUpdateInvoice(InvoiceRequest invoiceRequest) {
+    public Invoice createOrUpdateInvoice(InvoiceRequest invoiceRequest, User currentUser) {
 
         Currency c = currencyRepository.findOne(invoiceRequest.getCurrencyId());
-        Recipient r = recipientRepository.findOne(invoiceRequest.getRecipientId());
+        Client r = clientRepository.findOne(invoiceRequest.getClientId());
 
         Invoice invoice = invoiceRequest.toInvoice();
         invoice.setCurrency(c);
-        invoice.setRecipient(r);
+        invoice.setClient(r);
+        invoice.setUser(currentUser);
         final Set<InvoiceItem> items = invoice.getInvoiceItems().stream().map(item -> {
             item.setPrice(item.getUnitCost().multiply(new BigDecimal(item.getQuantity())));
             return item;

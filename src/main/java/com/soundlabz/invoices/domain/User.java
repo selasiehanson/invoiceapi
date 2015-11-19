@@ -53,6 +53,17 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<UserAuthority> authorities;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Invoice> invoices;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Client> client;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private UserCompany userCompany;
+
     public User() {
 
     }
@@ -174,6 +185,30 @@ public class User implements UserDetails {
 
     public void setExpires(long expires) {
         this.expires = expires;
+    }
+
+    public Set<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Set<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
+    public Set<Client> getClient() {
+        return client;
+    }
+
+    public void setClient(Set<Client> client) {
+        this.client = client;
+    }
+
+    public UserCompany getUserCompany() {
+        return userCompany;
+    }
+
+    public void setUserCompany(UserCompany userCompany) {
+        this.userCompany = userCompany;
     }
 
     @Override

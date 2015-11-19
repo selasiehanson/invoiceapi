@@ -24,7 +24,7 @@ public class InvoiceRequest {
     @Valid
     private Set<InvoiceItemRequest> invoiceItems;
 
-    private Long recipientId;
+    private Long clientId;
 
     private Long currencyId;
 
@@ -73,12 +73,12 @@ public class InvoiceRequest {
         this.invoiceItems = invoiceItems;
     }
 
-    public Long getRecipientId() {
-        return recipientId;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setRecipientId(Long recipientId) {
-        this.recipientId = recipientId;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public Long getCurrencyId() {

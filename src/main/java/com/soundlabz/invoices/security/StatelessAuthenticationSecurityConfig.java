@@ -49,7 +49,7 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
 
                 //todo: add permissions to API
                 .antMatchers(HttpMethod.GET, "/templates/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
 
                 //all other request to be authenticated
                 .anyRequest().hasRole("USER").and()
