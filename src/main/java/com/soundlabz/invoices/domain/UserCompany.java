@@ -31,6 +31,8 @@ public class UserCompany {
     @NotNull
     private String website;
 
+    private String logo;
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -39,7 +41,6 @@ public class UserCompany {
 
     public UserCompany() {
     }
-
 
     public String getName() {
         return name;
@@ -95,5 +96,13 @@ public class UserCompany {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }
