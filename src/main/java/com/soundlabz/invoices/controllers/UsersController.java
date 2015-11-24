@@ -6,8 +6,7 @@ import com.soundlabz.invoices.domain.repositories.UserCompanyRepository;
 import com.soundlabz.invoices.domain.repositories.UserRepository;
 import com.soundlabz.invoices.security.UserAuthentication;
 import com.soundlabz.invoices.services.FileManager;
-import com.soundlabz.invoices.utils.ImageTypeAssit;
-import org.apache.tomcat.util.codec.binary.Base64;
+import com.soundlabz.invoices.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -30,6 +29,8 @@ public class UsersController extends BaseController {
 
     private UserCompanyRepository userCompanyRepository;
 
+    private ImageService imageService;
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -39,6 +40,12 @@ public class UsersController extends BaseController {
     public void setUserCompanyRepository(UserCompanyRepository userCompanyRepository) {
         this.userCompanyRepository = userCompanyRepository;
     }
+
+    @Autowired
+    public void setImageService(ImageService imageService) {
+        this.imageService = imageService;
+    }
+
 
     @Autowired
     public void setFileManager(FileManager fileManager) {
@@ -80,16 +87,9 @@ public class UsersController extends BaseController {
     public Map<String, String> getLogo() {
         Long userId = getCurrentUser().getId();
         String logoFilename = userCompanyRepository.findByUserId(userId).getLogo();
-
         try {
-            byte[] bytes = fileManager.getBytes(logoFilename);
-
-            String encodedImageStr = org.apache.tomcat.util.codec.binary.StringUtils.newStringUtf8(Base64.encodeBase64(bytes));
-            String prefix = ImageTypeAssit.basePrefixFromFilename(logoFilename);
-            String imageUri = String.format("%s,%s", prefix, encodedImageStr);
-
             Map<String, String> dataUri = new HashMap<>();
-            dataUri.put("logo", imageUri);
+            dataUri.put("logo", imageService.getImageAsDataUri(logoFilename));
             return dataUri;
         } catch (IOException e) {
             e.printStackTrace();

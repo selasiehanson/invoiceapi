@@ -22,6 +22,13 @@ public class HtmlToPdfConverterImpl implements HtmlToPdfConverterService {
         ctx.setVariable("name", "Kojo");
         ctx.setVariable("subscriptionDate", new Date());
         ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+
+//        String templateFolder = getClass().getResource("templates").getPath();
+        String bunldeJs = "http://localhost:9000/bundle.js";
+        String style = "http://localhost:9000/style.css";
+        ctx.setVariable("bundleJS", bunldeJs);
+        ctx.setVariable("style", style);
+
         String htmlContent = templateEngine.process("invoice", ctx);
         HtmlToPdfConverter htmlToPdfConverter = new HtmlToPdfConverter();
 

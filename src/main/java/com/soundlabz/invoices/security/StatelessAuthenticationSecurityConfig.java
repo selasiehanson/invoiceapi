@@ -31,32 +31,56 @@ public class StatelessAuthenticationSecurityConfig extends WebSecurityConfigurer
         super(true);
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 .exceptionHandling().and()
                 .anonymous().and()
                 .servletApi().and()
-                .headers().cacheControl().and()
-                .authorizeRequests()
+                .headers().cacheControl().and().configure(http);
 
+        http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/resources/**").permitAll()
 
                 //allow anonymous post login
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-
-
                 .antMatchers(HttpMethod.GET, "/templates/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
 
-                //all other request to be authenticated
+                //authorize all other api requests
                 .anyRequest().hasRole("USER").and()
-                //CUstom JSON based authentication filter by post of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
                 .addFilterBefore(new StatelessLoginFilter("/api/login", tokenAuthenticationService, userDetailsService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 
                 .addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
+
+//        http
+//                .exceptionHandling().and()
+//                .anonymous().and()
+//                .servletApi().and()
+//                .headers().cacheControl().and()
+//                .authorizeRequests()
+//
+//                .antMatchers("/").permitAll()
+//                .antMatchers("/favicon.ico").permitAll()
+//                .antMatchers("/resources/**").permitAll()
+//
+//                //allow anonymous post login
+//                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+//
+//
+//                .antMatchers(HttpMethod.GET, "/templates/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+////                .antMatchers(HttpMethod.GET, "**").permitAll()
+//
+//                //all other request to be authenticated
+//                .anyRequest().hasRole("USER").and()
+//                //CUstom JSON based authentication filter by post of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
+//                .addFilterBefore(new StatelessLoginFilter("/api/login", tokenAuthenticationService, userDetailsService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+//
+//                .addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
 
 
     }

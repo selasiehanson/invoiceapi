@@ -3,6 +3,7 @@
 <head>
     <title th:remove="all">Template for HTML email with inline image</title>
 
+    <link rel="stylesheet" href="../static/css/style.css"  />
 </head>
 <body>
 <style>
@@ -48,7 +49,10 @@
 
     <div class="clearfix">
         <div class="mid-box pull-left">
-            <h1>Name / Logo</h1>
+            <h1 th:if="${logo == null }">Name / Logo</h1>
+            <div th:if="${logo != null}">
+                <img width="150" height="150" th:src="${logo}"/>
+            </div>
         </div>
         <div class="lil-box pull-right">
             <h2 class="invoice-title">Service Invoice</h2>
