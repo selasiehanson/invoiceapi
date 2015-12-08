@@ -9,40 +9,40 @@
 <style>
 
     .mid-box {
-    width: 350px;
+        width: 350px;
     }
     .lil-box {
-    width: 250px;
+        width: 250px;
     }
 
     .mid-box table > tbody > tr > td, .lil-box table > tbody > tr > td {
-    padding: 0px;
-    border: 0px;
+        padding: 0px;
+        border: 0px;
     }
     .invoice-preview {
-    /*font-size: 12px !important;*/
-    padding: 0px 25px;
+        padding: 0px 25px;
+        margin-bottom: 100px;
     }
 
     .invoice-preview table td {
-    font-size: 12px;
+        font-size: 12px;
     }
 
     .invoice-preview .table > thead > tr > th {
-    border-width: 1px;
+        border-width: 1px;
     }
 
     .invoice-preview .invoice-title {
-    /*color: aqua;*/
+        /*color: aqua;*/
     }
 
     .origin-destination-marker {
-    border-bottom: 1px solid #dedede;
-    /*font-weight: bold;*/
-    width: 100%;
+        border-bottom: 1px solid #dedede;
+        /*font-weight: bold;*/
+        width: 100%;
     }
     .invoice-preview .invoice-items-container {
-    margin-top: 30px;
+        margin-top: 30px;
     }
 </style>
 <div class="invoice-preview">
@@ -75,7 +75,7 @@
                 <tbody>
                 <tr>
                     <td>Invoice No:</td>
-                    <td> SNDLBZ1237888 </td>
+                    <td> {{ appForm.currentInvoice.invoiceNumber }}  </td>
                 </tr>
                 <tr>
                     <td>Date</td>

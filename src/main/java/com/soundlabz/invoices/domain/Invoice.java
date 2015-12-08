@@ -61,6 +61,10 @@ public class Invoice {
 
     private String notes;
 
+    @NotNull
+    @Column(name = "invoice_number")
+    private String invoiceNumber;
+
     @JsonSerialize(using = JsonDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dueDate;
@@ -171,5 +175,13 @@ public class Invoice {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 }

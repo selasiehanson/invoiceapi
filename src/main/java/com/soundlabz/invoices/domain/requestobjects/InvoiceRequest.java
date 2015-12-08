@@ -30,6 +30,8 @@ public class InvoiceRequest {
 
     private String notes;
 
+    public String invoiceNumber;
+
     public InvoiceRequest() {
     }
 
@@ -97,6 +99,14 @@ public class InvoiceRequest {
         this.notes = notes;
     }
 
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
     public Invoice toInvoice() {
         Invoice invoice = new Invoice();
 
@@ -105,6 +115,8 @@ public class InvoiceRequest {
         invoice.setInvoiceDate(this.getInvoiceDate());
         invoice.setDueDate(this.getDueDate());
         invoice.setNotes(this.getNotes());
+
+        invoice.setInvoiceNumber(this.getInvoiceNumber());
         Set<InvoiceItem> items =  this.getInvoiceItems().stream().map(x -> x.toInvoiceItem()).collect(Collectors.toSet());
         invoice.setInvoiceItems(items);
         invoice.getInvoiceItems().stream().forEach(x -> x.setInvoice(invoice));
