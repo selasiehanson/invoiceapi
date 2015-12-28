@@ -6,6 +6,7 @@ import com.soundlabz.invoices.domain.requestobjects.InvoiceRequest;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
 
 public interface InvoiceService {
     Collection<Invoice> getInvoices(User user);
@@ -16,5 +17,5 @@ public interface InvoiceService {
 
     void deleteInvoice(Long id);
 
-    byte[] getPreview() throws IOException;
+    byte[] getPreview(Map<String, Object> inputs) throws IOException;
 }

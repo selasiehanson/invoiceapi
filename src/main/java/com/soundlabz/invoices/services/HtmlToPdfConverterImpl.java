@@ -7,8 +7,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.Map;
 
 @Service
 public class HtmlToPdfConverterImpl implements HtmlToPdfConverterService {
@@ -17,18 +16,20 @@ public class HtmlToPdfConverterImpl implements HtmlToPdfConverterService {
     private TemplateEngine templateEngine;
 
     @Override
-    public String convert() {
+    public String convert(Map<String, Object> inputs) {
         final Context ctx = new Context();
-        ctx.setVariable("name", "Kojo");
-        ctx.setVariable("subscriptionDate", new Date());
-        ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+        ctx.setVariable("toPdf", true);
 
-//        String templateFolder = getClass().getResource("templates").getPath();
-        String bundleJs = "http://localhost:9000/bundle.js";
-        String style = "http://localhost:9000/style.css";
-        ctx.setVariable("bundleJS", bundleJs);
-        ctx.setVariable("style", style);
+        String style = getClass().getClassLoader().getResource("static/css/style.css").getFile();
+        String bundleJs = getClass().getClassLoader().getResource("static/js/bundle.js").getFile();
 
+        String stylePath = String.format("file://%s", style);
+        String bundlePath = String.format("file://%s", bundleJs);
+        ctx.setVariable("style", stylePath);
+        ctx.setVariable("bundleJS", bundlePath);
+        ctx.setVariable("data", inputs.get("data"));
+        ctx.setVariable("logo", inputs.get("logo"));
+        ctx.setVariable("invoice",inputs.get("invoice"));
         String htmlContent = templateEngine.process("invoice", ctx);
         HtmlToPdfConverter htmlToPdfConverter = new HtmlToPdfConverter();
 

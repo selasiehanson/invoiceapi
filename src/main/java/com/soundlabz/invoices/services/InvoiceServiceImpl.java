@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -98,8 +99,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public byte[] getPreview() throws IOException {
-        String fullOutputFilePath = htmlToPdfConverterService.convert();
+    public byte[] getPreview(Map<String, Object> inputs) throws IOException {
+        String fullOutputFilePath = htmlToPdfConverterService.convert(inputs);
         RandomAccessFile f = new RandomAccessFile(fullOutputFilePath, "r");
         byte[] b = new byte[(int) f.length()];
         f.readFully(b);

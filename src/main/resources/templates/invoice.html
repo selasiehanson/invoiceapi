@@ -3,22 +3,28 @@
 <head>
     <title th:remove="all">Template for HTML email with inline image</title>
 
-    <link rel="stylesheet" href="../static/css/style.css"  />
+    <link th:if="${toPdf}" rel="stylesheet" th:href="${style}"/>
+    <script th:if="${toPdf}">
+     window.passThrough = true;
+    </script>
+    <script th:if="${toPdf}" th:src="${bundleJs}"></script>
 </head>
 <body>
+<div th:if="${toPdf}"></div>
 <style>
 
     .mid-box {
-        width: 350px;
+        width: 250px;
     }
     .lil-box {
-        width: 250px;
+        width: 180px;
     }
 
     .mid-box table > tbody > tr > td, .lil-box table > tbody > tr > td {
         padding: 0px;
         border: 0px;
     }
+
     .invoice-preview {
         padding: 0px 25px;
         margin-bottom: 100px;
@@ -33,7 +39,7 @@
     }
 
     .invoice-preview .invoice-title {
-        /*color: aqua;*/
+        font-size: 25px;
     }
 
     .origin-destination-marker {
@@ -41,6 +47,7 @@
         /*font-weight: bold;*/
         width: 100%;
     }
+
     .invoice-preview .invoice-items-container {
         margin-top: 30px;
     }
@@ -51,18 +58,26 @@
         <div class="mid-box pull-left">
             <h1 th:if="${logo == null }">Name / Logo</h1>
             <div th:if="${logo != null}">
-                <img width="150" height="150" th:src="${logo}"/>
+                <img width="100" height="100" th:src="${logo}"/>
             </div>
         </div>
         <div class="lil-box pull-right">
             <h2 class="invoice-title">Service Invoice</h2>
             <div class="">
-                <label for="" class="origin-destination-marker"> From </label>
+                <label class="origin-destination-marker"> From </label>
                 <table class="table">
-                    <tr><td> <b>Company Name</b> </td></tr>
-                    <tr><td> company address</td></tr>
-                    <tr><td> company-email@mail.com</td></tr>
-                    <tr><td> +122 898 782 9098</td></tr>
+                    <tr>
+                        <td><b>Company Name</b></td>
+                    </tr>
+                    <tr>
+                        <td> company address</td>
+                    </tr>
+                    <tr>
+                        <td> company-email@mail.com</td>
+                    </tr>
+                    <tr>
+                        <td> +122 898 782 9098</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -70,21 +85,21 @@
 
     <div class="clearfix">
         <div class="mid-box pull-left">
-            <label for="" class="origin-destination-marker">Summary</label>
+            <label  class="origin-destination-marker">Summary</label>
             <table class="table">
                 <tbody>
                 <tr>
                     <td>Invoice No:</td>
-                    <td> {{ appForm.currentInvoice.invoiceNumber }}  </td>
+                    <td th:text="${invoice.invoiceNumber}"> </td>
                 </tr>
                 <tr>
                     <td>Date</td>
-                    <td> {{ appForm.currentInvoice.invoiceDate }} -  {{ appForm.currentInvoice.dueDate }} </td>
+                    <td> <span th:text="${invoice.invoiceDate}"></span> to <span th:text="${invoice.dueDate}"></span> </td>
                 </tr>
                 <tr>
                     <td><b> Amount Due </b></td>
                     <td>
-                        <b>{{ appForm.currentInvoice.currency.symbol }} {{ appForm.currentInvoice.total }}</b>
+                        <b><span th:text="${invoice.currency.symbol}"></span><span th:text="${invoice.total}"> </span></b>
                     </td>
                 </tr>
                 </tbody>
@@ -92,12 +107,20 @@
         </div>
         <div class="customer-details lil-box pull-right">
             <table class="table">
-                <label for="" class="origin-destination-marker">To</label>
+                <label  class="origin-destination-marker">To</label>
                 <tbody>
-                <tr><td> <b> {{ appForm.currentInvoice.client.name }}</b> </td></tr>
-                <tr><td> {{ appForm.currentInvoice.client.address }}</td></tr>
-                <tr><td> {{ appForm.currentInvoice.client.email }}</td></tr>
-                <tr><td> {{ appForm.currentInvoice.client.phoneNumber }}</td></tr>
+                <tr>
+                    <td><b ><span th:text="${invoice.client.name}"> </span></b></td>
+                </tr>
+                <tr>
+                    <td><span th:text="${invoice.client.address}"> </span></td>
+                </tr>
+                <tr>
+                    <td> <span th:text="${invoice.client.email}"> </span></td>
+                </tr>
+                <tr>
+                    <td><span th:text="${invoice.client.phoneNumber}"> </span></td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -114,12 +137,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in appForm.currentInvoice.invoiceItems">
-                <td> {{ $index + 1 }}. </td>
-                <td> {{ item.description }} </td>
-                <td class="tright"> {{ item.quantity }} </td>
-                <td class="tright"> {{ item.unitCost }} </td>
-                <td class="tright"> {{ appForm.computeLineTotal(item.quantity, item.unitCost) }} </td>
+            <tr th:each="item,meta : ${invoice.invoiceItems}">
+                <td> <span th:text="${meta.count}"></span>. </td>
+                <td> <span th:text="${item.description}"> </span>  </td>
+                <td class="tright"> <span th:text="${item.quantity}"> </span></td>
+                <td class="tright"> <span th:text="${item.unitCost}"> </span></td>
+                <td class="tright"> <span th:with="result=${item.unitCost * item.quantity}" th:text="${result}"> </span></td>
             </tr>
             </tbody>
         </table>
@@ -129,19 +152,35 @@
             <div class="col-sm-3 pull-right">
                 <div class="form-group">
                     <label class=""> Tax (%):</label>
-                    <label class="pull-right"> {{ appForm.currentInvoice.tax }} </label>
+                    <label class="pull-right"><span th:text="${invoice.tax}"> </span></label>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-3 pull-right total-box">
-                <label for=""> <b>Total: </b> </label>
+                <label> <b>Total: </b> </label>
                 <label class="pull-right">
-                    <b> {{ appForm.currentInvoice.currency.symbol }} {{ appForm.currentInvoice.total }} </b>
+                    <b> <span th:text="${invoice.currency.symbol}"></span><span th:text="${invoice.total}"> </span>  </b>
                 </label>
             </div>
         </div>
     </div>
 </div>
+<script th:if="${toPdf}">
+
+        var cleanUp = function(){
+            if(window.passThrough){
+                ["ax-sidenav", "main"].forEach(function (x) {
+                    console.log(x);
+                    var k = document.getElementById(x);
+                    k.remove();
+                });
+            }
+        };
+        //$(document).ready();
+        setTimeout(cleanUp, 200);
+
+
+</script>
 </body>
 </html>

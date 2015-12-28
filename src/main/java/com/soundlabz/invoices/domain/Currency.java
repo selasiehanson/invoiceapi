@@ -1,8 +1,11 @@
 package com.soundlabz.invoices.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,6 +39,10 @@ public class Currency {
 
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Invoice> invoices;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.currency")
+    @JsonIgnore
+    private Set<UserCurrency> userCurrencies = new HashSet<UserCurrency>(0);
 
     public Currency() {
 
@@ -103,6 +110,22 @@ public class Currency {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public Set<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Set<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
+    public Set<UserCurrency> getUserCurrencies() {
+        return userCurrencies;
+    }
+
+    public void setUserCurrencies(Set<UserCurrency> userCurrencies) {
+        this.userCurrencies = userCurrencies;
     }
 }
 

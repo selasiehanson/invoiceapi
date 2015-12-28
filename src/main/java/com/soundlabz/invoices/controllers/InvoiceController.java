@@ -1,29 +1,43 @@
 package com.soundlabz.invoices.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soundlabz.invoices.controllers.exceptions.ParameterMissingException;
 import com.soundlabz.invoices.domain.Invoice;
+import com.soundlabz.invoices.domain.repositories.UserCompanyRepository;
 import com.soundlabz.invoices.domain.requestobjects.InvoiceRequest;
+import com.soundlabz.invoices.services.ImageService;
 import com.soundlabz.invoices.services.InvoiceService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/invoices")
-public class InvoiceController extends  BaseController{
+public class InvoiceController extends BaseController {
 
     private InvoiceService invoiceService;
+    private ImageService imageService;
+    private UserCompanyRepository userCompanyRepository;
 
     @Autowired
     public void setInvoiceService(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
+    }
+
+    @Autowired
+    public void setImageService(ImageService imageService) {
+        this.imageService = imageService;
+    }
+
+    @Autowired
+    public void setUserCompanyRepository(UserCompanyRepository userCompanyRepository) {
+        this.userCompanyRepository = userCompanyRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -63,29 +77,38 @@ public class InvoiceController extends  BaseController{
         }
 
         if (invoiceRequest.getClientId() == null) {
-            throw new ParameterMissingException("Recipeint Id is mising");
+            throw new ParameterMissingException("Recipient Id is mising");
         }
 
         return invoiceService.createOrUpdateInvoice(invoiceRequest, getCurrentUser());
     }
 
+
+
     @RequestMapping(value = "/aspdf", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getPdfOfInvoice() {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        String filename = "preview.pdf";
+    public Map<String, String> getPdfOfInvoice(@RequestParam Long invoiceId) {
 
-        //downloads the pdf
-        //headers.setContentDispositionFormData(filename, filename);
 
-        //shows pdf inline
-        headers.add("content-disposition", "inline;filename=" + filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        Invoice invoice = invoiceService.getInvoice(invoiceId);
+        ObjectMapper mapper = new ObjectMapper();
+
         try {
-            return new ResponseEntity<byte[]>(invoiceService.getPreview(), headers, HttpStatus.OK);
+            String output = mapper.writeValueAsString(invoice);
+            System.out.println(output);
+            Map<String, Object> inputs =  new HashMap<>();
+            inputs.put("invoice", invoice);
+            String logoFilename = userCompanyRepository.findByUserId(getCurrentUser().getId()).getLogo();
+            String imageDataUri = imageService.getImageAsDataUri(logoFilename);
+            inputs.put("logo", imageDataUri);
+
+            byte[] bytes = invoiceService.getPreview(inputs);
+            String encodedImageStr = org.apache.tomcat.util.codec.binary.StringUtils.newStringUtf8(Base64.encodeBase64(bytes));
+            Map<String, String> dataUri = new HashMap<>();
+            dataUri.put("pdf", encodedImageStr);
+            return dataUri;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<byte[]>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        return null;
     }
 }

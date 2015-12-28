@@ -61,8 +61,12 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Client> client;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private UserCompany userCompany;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "pk.user")
+    @JsonIgnore
+    public Set<UserCurrency> userCurrencies = new HashSet<UserCurrency>(0);
 
     public User() {
 
@@ -214,5 +218,13 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return getClass().getSimpleName() + ":" + getUsername();
+    }
+
+    public Set<UserCurrency> getUserCurrencies() {
+        return userCurrencies;
+    }
+
+    public void setUserCurrencies(Set<UserCurrency> userCurrencies) {
+        this.userCurrencies = userCurrencies;
     }
 }
